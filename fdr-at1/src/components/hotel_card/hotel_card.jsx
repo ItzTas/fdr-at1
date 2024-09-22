@@ -1,11 +1,21 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import styles from './hotel_card.module.css';
+import { Link } from 'react-router-dom';
 
-export default function HotelCard({ hotelSiteURL, imgURL, name, desc, stars }) {
+export default function HotelCard({
+  hotelSiteURL,
+  imgURL,
+  name,
+  desc,
+  stars,
+  city,
+  state,
+  price,
+}) {
   const [imgLoaded, setImgLoaded] = useState(true);
-  if (desc.length > 63) {
-    desc = desc.substring(0, 60) + '...';
+  if (desc.length > 60) {
+    desc = desc.substring(0, 57) + '...';
   }
 
   function renderStars() {
@@ -20,7 +30,7 @@ export default function HotelCard({ hotelSiteURL, imgURL, name, desc, stars }) {
     return starElements;
   }
   return (
-    <a href={hotelSiteURL}>
+    <Link href={hotelSiteURL}>
       <div className={styles.hotelCard}>
         {imgLoaded ? (
           <img
@@ -35,8 +45,13 @@ export default function HotelCard({ hotelSiteURL, imgURL, name, desc, stars }) {
         <h2 className={styles.hotelName}>{name}</h2>
         <p>{desc}</p>
         <div className={styles.hotelStars}> {renderStars()}</div>
+        <div className={styles.infos}>
+          <div className={styles.state}>Estado: {state}</div>
+          <div className={styles.city}>Cidade: {city}</div>
+          <div className={styles.price}>Preço: R${price.toFixed(2)}</div>
+        </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -46,4 +61,7 @@ HotelCard.propTypes = {
   desc: PropTypes.string.isRequired,
   stars: PropTypes.number.isRequired,
   hotelSiteURL: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
 };
