@@ -4,7 +4,7 @@ import styles from './hotel_card.module.css';
 import { Link } from 'react-router-dom';
 
 export default function HotelCard({
-  hotelSiteURL,
+  hotelURL,
   imgURL,
   name,
   desc,
@@ -30,7 +30,7 @@ export default function HotelCard({
     return starElements;
   }
   return (
-    <Link href={hotelSiteURL}>
+    <Link className={styles.link} href={hotelURL}>
       <div className={styles.hotelCard}>
         {imgLoaded ? (
           <img
@@ -60,7 +60,7 @@ HotelCard.propTypes = {
   name: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
   stars: PropTypes.number.isRequired,
-  hotelSiteURL: PropTypes.string.isRequired,
+  hotelURL: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   state: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,

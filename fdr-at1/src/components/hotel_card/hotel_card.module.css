@@ -1,5 +1,5 @@
 .hotelCard {
-    filter: all 0.1s;
+    transform: all 0.2s;
     width: clamp(300px, 40vw, 390px);
     height: clamp(400px, 70vw, 450px);
     box-shadow: 0px 0px 29px -13px rgba(0, 0, 0, 1);
@@ -12,6 +12,14 @@
     font-size: clamp(1.04rem, 2vw, 1.6rem);
     text-align: center;
     cursor: pointer;
+}
+
+.hotelCard:hover {
+    filter: brightness(95%);
+}
+
+.link {
+    display: inline-block;
 }
 
 .infos {
@@ -32,7 +40,7 @@
 }
 
 .hotelStar:hover {
-    filter: brightness(70%);
+    filter: brightness(60%);
     transition: all 0.8s;
 }
 
