@@ -51,7 +51,10 @@
 .imgCard {
     border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
-    height: auto;
+    display: inline-block;
+    min-height: 140px;
+    max-height: 140px;
+    object-fit: cover;
     border-radius: 8px;
     box-shadow: 0px 23px 29px -23px rgba(0, 0, 0, 0.23);
     transition: all 0.5s;
@@ -64,5 +67,10 @@
 @media (min-width: 730px) {
     .hotelCard {
         height: clamp(490px, 50vw, 520px);
+    }
+
+    .imgCard {
+        max-height: 180px;
+        min-height: 180px;
     }
 }
