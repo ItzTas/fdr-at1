@@ -3,3 +3,19 @@
     flex-direction: column;
     align-items: center;
 }
+
+@media (min-width: 1050px) {
+    .hotelList {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 1804px) {
+    .hotelList {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+    }
+}
