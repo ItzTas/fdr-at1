@@ -1,11 +1,16 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from '../pages/home/home';
+import UniqueHotel from '../pages/hotels/hotel_unique/hotel_unique';
 
 export default function Router() {
     const routes = [
         {
             path: '/',
             element: <Home />,
+        },
+        {
+            path: '/hotels/Hotel+Unique',
+            element: <UniqueHotel />,
         },
     ];
 

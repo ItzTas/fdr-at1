@@ -1,0 +1,98 @@
+.hotelDetails {
+    font-size: clamp(1.3rem, 1.3vw, 2rem);
+}
+
+.name {
+    text-align: center;
+    font-size: clamp(3rem, 3vw, 4rem);
+    margin: 10px;
+}
+
+.images {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    align-items: center;
+}
+
+.image {
+    width: clamp(370px, 65vw, 400px);
+    border-radius: 8px;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.image:hover {
+    filter: brightness(70%);
+}
+
+.lists h3 {
+    text-align: center;
+}
+
+.lists {
+    border: 1px solid black;
+    display: inline-block;
+    border-radius: 8px;
+    width: clamp(370px, 30vw, 480px);
+    padding: 20px 0;
+    user-select: none;
+    transition: all 0.5s;
+}
+
+.lists:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.lists ul {
+    text-align: center;
+}
+
+.lists li {
+    margin-top: 7px;
+}
+
+.lists li:first-child {
+    margin-top: 0;
+}
+
+.lists ul {
+    margin-top: 10px;
+}
+
+.listBoxes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 20px;
+}
+
+.desc {
+    text-indent: 20px;
+    margin: 19px 12px;
+}
+
+.desc::first-letter {
+    font-weight: bold;
+    font-size: clamp(2rem, 1.8vw, 3rem);
+}
+
+@media (min-width: 1080px) {
+    .listBoxes {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 1200px) {
+    .images {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .image {
+        min-height: 270px;
+    }
+}
