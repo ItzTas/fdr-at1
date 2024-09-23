@@ -78,6 +78,29 @@
     font-size: clamp(2rem, 1.8vw, 3rem);
 }
 
+.locations {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.locations h3 {
+    width: 100%;
+    text-align: left;
+}
+
+.price {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.price span {
+    border-bottom: 2px solid red;
+}
+
 @media (min-width: 1080px) {
     .listBoxes {
         flex-direction: row;

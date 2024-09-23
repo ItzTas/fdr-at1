@@ -10,18 +10,33 @@ export default function HotelDetails({
     services,
     state,
     city,
+    price,
 }) {
+    const storedHotel = localStorage.getItem('@selectedHotel');
+    const parsedHotel = JSON.parse(storedHotel) || {};
+
+    const hotelData = {
+        hotelsIMGs: hotelsIMGs || parsedHotel.hotelsIMGs || [],
+        name: name || parsedHotel.name || '',
+        desc: desc || parsedHotel.desc || '',
+        items: items || parsedHotel.items || [],
+        services: services || parsedHotel.services || [],
+        state: state || parsedHotel.state || '',
+        city: city || parsedHotel.city || '',
+        price: price || parsedHotel.price || 0,
+    };
+
     return (
         <div className={styles.hotelDetails}>
-            <h2 className={styles.name}>{name}</h2>
+            <h2 className={styles.name}>{hotelData.name}</h2>
 
             <div className={styles.images}>
-                {hotelsIMGs.map((img, i) =>
+                {hotelData.hotelsIMGs.map((img, i) =>
                     isValidImageURL(img) ? (
                         <img
                             className={styles.image}
                             src={img}
-                            alt={'Imagem de ' + name}
+                            alt={'Imagem de ' + hotelData.name}
                             key={i}
                         />
                     ) : (
@@ -35,13 +50,13 @@ export default function HotelDetails({
                 )}
             </div>
 
-            <p className={styles.desc}>{desc}</p>
+            <p className={styles.desc}>{hotelData.desc}</p>
 
             <div className={styles.listBoxes}>
                 <div className={styles.lists}>
                     <h3> Itens: </h3>
                     <ul>
-                        {items.map((item, i) => (
+                        {hotelData.items.map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -50,7 +65,7 @@ export default function HotelDetails({
                 <div className={styles.lists}>
                     <h3> Serviços: </h3>
                     <ul>
-                        {services.map((item, i) => (
+                        {hotelData.services.map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -58,18 +73,29 @@ export default function HotelDetails({
             </div>
 
             <div className={styles.locations}>
-                <h3>Cidade: </h3>
+                <span>
+                    <h3> Estado: {hotelData.state}</h3>
+                    <h3> Cidade: {hotelData.city}</h3>
+                </span>
             </div>
+
+            <p className={styles.price}>
+                <span>
+                    Preço: R$
+                    {hotelData.price.toFixed(2)}
+                </span>
+            </p>
         </div>
     );
 }
 
 HotelDetails.propTypes = {
-    name: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired,
-    items: PropTypes.arrayOf(PropTypes.string).isRequired,
-    services: PropTypes.arrayOf(PropTypes.string).isRequired,
-    hotelsIMGs: PropTypes.arrayOf(PropTypes.string).isRequired,
-    state: PropTypes.string.isRequired,
-    city: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    desc: PropTypes.string,
+    items: PropTypes.arrayOf(PropTypes.string),
+    services: PropTypes.arrayOf(PropTypes.string),
+    hotelsIMGs: PropTypes.arrayOf(PropTypes.string),
+    state: PropTypes.string,
+    city: PropTypes.string,
+    price: PropTypes.number,
 };
