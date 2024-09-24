@@ -59,6 +59,10 @@ button {
     transition: background-color 0.3s;
 }
 
+body.dark input {
+    color: #ffffff;
+}
+
 body.light button {
     background-color: #000000;
     color: #ffffff;
