@@ -71,7 +71,7 @@ HotelCard.propTypes = {
     name: PropTypes.string.isRequired,
     desc: PropTypes.string.isRequired,
     stars: PropTypes.number.isRequired,
-    hotelURL: PropTypes.string.isRequired,
+    hotelURL: PropTypes.string,
     city: PropTypes.string.isRequired,
     state: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
