@@ -11,6 +11,7 @@ export default function HotelList({
     onDelete,
     searchTerm,
     sortBy,
+    onFavorite,
 }) {
     const [hotels, setHotels] = useState([]);
 
@@ -59,6 +60,7 @@ export default function HotelList({
                     index={i}
                     key={i}
                     {...hotel}
+                    onFavorite={onFavorite}
                 />
             ))}
         </div>
@@ -83,5 +85,6 @@ HotelList.propTypes = {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
     searchTerm: PropTypes.string,
+    onFavorite: PropTypes.func,
     sortBy: PropTypes.string,
 };

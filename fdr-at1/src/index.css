@@ -28,3 +28,43 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+/* App.css */
+body {
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+}
+
+.app {
+    padding: 20px;
+}
+
+body.light {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.dark {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body.light button {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.dark button {
+    background-color: #ffffff;
+    color: #000000;
+}

@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 import styles from './add_hotel.module.css';
 
 export default function AddHotel({ onAdd, editingHotel }) {
-    const [open, setOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [openError, setOpenError] = useState(false);
+    const [openSuccess, setOpenSuccess] = useState(false);
+    const [snackMessage, setSnackMessage] = useState('');
     const fontSize = { fontSize: 'clamp(1.3rem, 1.34vw, 1.7rem)' };
 
     const [hotelData, setHotelData] = useState({
@@ -23,7 +24,8 @@ export default function AddHotel({ onAdd, editingHotel }) {
         if (reason === 'clickaway') {
             return;
         }
-        setOpen(false);
+        setOpenError(false);
+        setOpenSuccess(false);
     }
 
     function handleAdd(event) {
@@ -37,8 +39,8 @@ export default function AddHotel({ onAdd, editingHotel }) {
             hotelData.desc.trim() === '' ||
             hotelData.state.trim() === ''
         ) {
-            setErrorMessage('Todos os campos devem ser preenchidos.');
-            setOpen(true);
+            setSnackMessage('Todos os campos devem ser preenchidos.');
+            setOpenError(true);
             return;
         }
 
@@ -46,20 +48,20 @@ export default function AddHotel({ onAdd, editingHotel }) {
         const stars = parseInt(hotelData.stars);
 
         if (isNaN(price) || isNaN(stars)) {
-            setErrorMessage('A classificação e o preço devem ser numéricos.');
-            setOpen(true);
+            setSnackMessage('A classificação e o preço devem ser numéricos.');
+            setOpenError(true);
             return;
         }
 
         if (hotelData.stars > 5 || hotelData.stars < 1) {
-            setErrorMessage('A classificação deve estar entre 1 e 5 estrelas.');
-            setOpen(true);
+            setSnackMessage('A classificação deve estar entre 1 e 5 estrelas.');
+            setOpenError(true);
             return;
         }
 
         if (price < 0) {
-            setErrorMessage('O preço não pode ser negativo.');
-            setOpen(true);
+            setSnackMessage('O preço não pode ser negativo.');
+            setOpenError(true);
             return;
         }
 
@@ -74,6 +76,11 @@ export default function AddHotel({ onAdd, editingHotel }) {
             price: '',
             desc: '',
         });
+        setOpenSuccess(true);
+        if (editingHotel) {
+            return setSnackMessage('Hotel ' + name + ' editado com successo');
+        }
+        setSnackMessage('Hotel ' + name + ' adicionado com sucesso');
     }
 
     useEffect(() => {
@@ -181,13 +188,22 @@ export default function AddHotel({ onAdd, editingHotel }) {
                     {editingHotel ? 'Editar' : 'Adicionar'}
                 </Button>
             </form>
-            <Snackbar open={open}>
+            <Snackbar open={openSuccess}>
+                <Alert
+                    onClose={handleCloseSnack}
+                    severity='success'
+                    sx={{ width: '100%' }}
+                >
+                    {snackMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={openError}>
                 <Alert
                     onClose={handleCloseSnack}
                     severity='error'
                     sx={{ width: '100%' }}
                 >
-                    {errorMessage}
+                    {snackMessage}
                 </Alert>
             </Snackbar>
         </>

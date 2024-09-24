@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { isEqual } from 'lodash';
 
 export default function HotelCard({
     hotelURL,
@@ -18,6 +19,7 @@ export default function HotelCard({
     onEdit,
     index,
     onDelete,
+    onFavorite,
 }) {
     const [imgLoaded, setImgLoaded] = useState(true);
     const [hotelData, setHotelData] = useState({
@@ -29,10 +31,25 @@ export default function HotelCard({
         price,
         imgURL,
     });
+    const [selected, setSelected] = useState(false);
 
     useEffect(() => {
         setHotelData({ name, desc, stars, city, state, price, imgURL });
     }, [name, desc, stars, city, state, price, imgURL]);
+
+    useEffect(() => {
+        const favoritesList = localStorage.getItem('@favoritesList');
+        if (!favoritesList) {
+            return localStorage.setItem('@favoritesList', '[]');
+        }
+        const favorites = JSON.parse(favoritesList);
+        for (const favorite of favorites) {
+            if (isEqual(favorite, hotelData)) {
+                setSelected(true);
+                break;
+            }
+        }
+    }, [hotelData]);
 
     function renderStars() {
         return Array.from({ length: hotelData.stars }, (_, i) => (
@@ -62,6 +79,14 @@ export default function HotelCard({
         onDelete(index);
     }
 
+    function handleSelectFavorite(event) {
+        event.preventDefault();
+        const newSelected = !selected;
+        setSelected(newSelected);
+
+        onFavorite(hotelData, index, newSelected);
+    }
+
     return (
         <Link className={styles.link} to={hotelURL} onClick={handleCardClick}>
             <div className={styles.hotelCard}>
@@ -75,7 +100,18 @@ export default function HotelCard({
                 ) : (
                     <div className={styles.imgCard}>Imagem não disponível</div>
                 )}
-                <h2 className={styles.hotelName}>{hotelData.name}</h2>
+                <h2 className={styles.hotelName}>
+                    {hotelData.name}
+
+                    <span
+                        className={styles.favorite}
+                        onClick={(event) => {
+                            handleSelectFavorite(event);
+                        }}
+                    >
+                        {selected ? '⭐' : '☆'}
+                    </span>
+                </h2>
                 <p>
                     {hotelData.desc.length > 59
                         ? hotelData.desc.substring(0, 56) + '...'
@@ -125,4 +161,5 @@ HotelCard.propTypes = {
     onEdit: PropTypes.func,
     index: PropTypes.number,
     onDelete: PropTypes.func,
+    onFavorite: PropTypes.func,
 };

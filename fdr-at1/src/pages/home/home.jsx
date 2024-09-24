@@ -3,6 +3,8 @@ import HotelList from '../../components/hotel_list/hotel_list';
 import AddHotel from '../../components/add_hotel/add_hotel';
 import SearchBar from '../../components/search_bar/search_bar';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import Favorites from '../../components/favorites/favorites';
+import ThemeToggle from '../../components/theme_toggle/theme_toggle';
 
 const initialHotels = [
     {
@@ -46,6 +48,8 @@ export default function Home() {
     const [editingIndex, setEditingIndex] = useState(-1);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('price');
+    const [favorites, setFavorites] = useState([]);
+    const [theme, setTheme] = useState('');
 
     useEffect(() => {
         let hotelList = localStorage.getItem('@hotelsList');
@@ -54,7 +58,25 @@ export default function Home() {
             hotelList = localStorage.getItem('@hotelsList');
         }
         setHotels(JSON.parse(hotelList));
+
+        const favoritesList = localStorage.getItem('@favoritesList');
+        if (favoritesList) {
+            setFavorites(JSON.parse(favoritesList));
+        }
+
+        const storedTheme = localStorage.getItem('@theme');
+        if (storedTheme) {
+            setTheme(storedTheme);
+        }
     }, []);
+
+    useEffect(() => {
+        if (!theme) {
+            return;
+        }
+        document.body.className = theme;
+        localStorage.setItem('@theme', theme);
+    }, [theme]);
 
     function handleAdd(hotel) {
         if (editingHotel) {
@@ -89,15 +111,49 @@ export default function Home() {
         setSearchTerm(searchTerm);
     }
 
-    const handleSortChange = (event) => {
+    function handleSortChange(event) {
         setSortBy(event.target.value);
-    };
+    }
+
+    function handleFavorite(hotel, _, selected) {
+        if (selected) {
+            const oldFavorites = localStorage.getItem('@favoritesList');
+            const parsedOldFavorites = JSON.parse(oldFavorites);
+            const cFavorites = [...parsedOldFavorites, hotel];
+            setFavorites(cFavorites);
+            localStorage.setItem('@favoritesList', JSON.stringify(cFavorites));
+            return;
+        }
+        const oldFavorites = localStorage.getItem('@favoritesList');
+        const parsedOldFavorites = JSON.parse(oldFavorites);
+        const cFavorites = parsedOldFavorites.filter((h) => h.name !== hotel.name);
+        setFavorites(cFavorites);
+        localStorage.setItem('@favoritesList', JSON.stringify(cFavorites));
+    }
+
+    function toggleTheme() {
+        const prevTheme = localStorage.getItem('@theme');
+        if (!prevTheme) {
+            return;
+        }
+
+        let newTheme;
+
+        if (prevTheme === 'light') {
+            newTheme = 'dark';
+        } else {
+            newTheme = 'light';
+        }
+
+        setTheme(newTheme);
+        localStorage.setItem('@theme', newTheme);
+    }
 
     return (
         <div>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
             <AddHotel editingHotel={editingHotel} onAdd={handleAdd} />
             <SearchBar getSearch={getSearch} />
-
             <FormControl fullWidth sx={{ marginTop: '30px' }}>
                 <InputLabel>Ordenar por</InputLabel>
                 <Select value={sortBy} onChange={handleSortChange}>
@@ -106,7 +162,6 @@ export default function Home() {
                     <MenuItem value='stars'>Classificação</MenuItem>
                 </Select>
             </FormControl>
-
             <HotelList
                 searchTerm={searchTerm}
                 onDelete={handleDelete}
@@ -114,7 +169,9 @@ export default function Home() {
                 hotels={hotels}
                 margin='20px'
                 sortBy={sortBy}
+                onFavorite={handleFavorite}
             />
+            <Favorites hotels={favorites} />
         </div>
     );
 }
