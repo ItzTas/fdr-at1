@@ -1,10 +1,10 @@
 import { Alert, Button, Snackbar, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './add_hotel.module.css';
 
-export default function AddHotel({ onAdd }) {
+export default function AddHotel({ onAdd, editingHotel }) {
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const fontSize = { fontSize: 'clamp(1.3rem, 1.34vw, 1.7rem)' };
@@ -42,10 +42,10 @@ export default function AddHotel({ onAdd }) {
             return;
         }
 
-        hotelData.price = parseFloat(hotelData.price);
-        hotelData.stars = parseInt(hotelData.stars);
+        const price = parseFloat(hotelData.price);
+        const stars = parseInt(hotelData.stars);
 
-        if (isNaN(hotelData.price) || isNaN(hotelData.stars)) {
+        if (isNaN(price) || isNaN(stars)) {
             setErrorMessage('A classificação e o preço devem ser numéricos.');
             setOpen(true);
             return;
@@ -57,8 +57,33 @@ export default function AddHotel({ onAdd }) {
             return;
         }
 
-        onAdd(hotelData);
+        const { name, imgURL, desc, city, state } = hotelData;
+        onAdd({ name, imgURL, desc, city, state, price, stars });
+        setHotelData({
+            name: '',
+            imgURL: '',
+            stars: '',
+            city: '',
+            state: '',
+            price: '',
+            desc: '',
+        });
     }
+
+    useEffect(() => {
+        if (editingHotel) {
+            return setHotelData(editingHotel);
+        }
+        setHotelData({
+            name: '',
+            imgURL: '',
+            stars: '',
+            city: '',
+            state: '',
+            price: '',
+            desc: '',
+        });
+    }, [editingHotel]);
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -147,7 +172,7 @@ export default function AddHotel({ onAdd }) {
                     sx={{ ...fontSize, lineHeight: '1px' }}
                     startIcon={<AddIcon />}
                 >
-                    Adicionar
+                    {editingHotel ? 'Editar' : 'Adicionar'}
                 </Button>
             </form>
             <Snackbar open={open}>
@@ -165,4 +190,5 @@ export default function AddHotel({ onAdd }) {
 
 AddHotel.propTypes = {
     onAdd: PropTypes.func.isRequired,
+    editingHotel: PropTypes.object,
 };

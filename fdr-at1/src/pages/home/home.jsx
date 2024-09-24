@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HotelList from '../../components/hotel_list/hotel_list';
 import AddHotel from '../../components/add_hotel/add_hotel';
+import { number } from 'prop-types';
 
 const initialHotels = [
     {
         name: 'Hotel Unique',
         stars: 5,
-        desc: 'This is a hotel that will be used as the default for all customers',
+        desc: 'Um hotel exclusivo e luxuoso em São Paulo, oferecendo serviços de primeira linha.',
         city: 'São Paulo',
         state: 'São Paulo',
         price: 2000,
@@ -39,16 +40,43 @@ const initialHotels = [
 ];
 
 export default function Home() {
+    const [hotels, setHotels] = useState([]);
+    const [editingHotel, setEditingHotel] = useState(null);
+    const [editingIndex, setEditingIndex] = useState(-1);
+
     useEffect(() => {
-        if (!localStorage.getItem('@hotelsList')) {
+        let hotelList = localStorage.getItem('@hotelsList');
+        if (!hotelList) {
             localStorage.setItem('@hotelsList', JSON.stringify(initialHotels));
+            hotelList = localStorage.getItem('@hotelsList');
         }
+        setHotels(JSON.parse(hotelList));
     }, []);
+
+    function handleAdd(hotel) {
+        if (editingHotel) {
+            const updatedHotels = [...hotels];
+            updatedHotels[editingIndex] = hotel;
+            localStorage.setItem('@hotelsList', JSON.stringify(updatedHotels));
+            setHotels(updatedHotels);
+            setEditingHotel(null);
+            setEditingIndex(-1);
+            return;
+        }
+        const updatedHotels = [...hotels, hotel];
+        localStorage.setItem('@hotelsList', JSON.stringify(updatedHotels));
+        setHotels(updatedHotels);
+    }
+
+    function handleEdit(hotel, index) {
+        setEditingHotel(hotel);
+        setEditingIndex(index);
+    }
 
     return (
         <div>
-            <AddHotel />
-            <HotelList hotels={initialHotels} margin='20px' />
+            <AddHotel editingHotel={editingHotel} onAdd={handleAdd} />
+            <HotelList onEdit={handleEdit} hotels={hotels} margin='20px' />
         </div>
     );
 }

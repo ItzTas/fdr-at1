@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './hotel_card.module.css';
 import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 export default function HotelCard({
     hotelURL,
@@ -12,32 +13,45 @@ export default function HotelCard({
     city,
     state,
     price,
+    onEdit,
+    index,
 }) {
     const [imgLoaded, setImgLoaded] = useState(true);
-    if (desc.length > 60) {
-        desc = desc.substring(0, 57) + '...';
-    }
+    const [hotelData, setHotelData] = useState({
+        name,
+        desc,
+        stars,
+        city,
+        state,
+        price,
+        imgURL,
+    });
+
+    useEffect(() => {
+        setHotelData({ name, desc, stars, city, state, price, imgURL });
+    }, [name, desc, stars, city, state, price, imgURL]);
 
     function renderStars() {
-        const starElements = [];
-        for (let i = 0; i < stars; i++) {
-            starElements.push(
-                <span key={i} className={styles.hotelStar}>
-                    ⭐
-                </span>,
-            );
-        }
-        return starElements;
+        return Array.from({ length: hotelData.stars }, (_, i) => (
+            <span key={i} className={styles.hotelStar}>
+                ⭐
+            </span>
+        ));
     }
 
     function handleCardClick() {
-        const hotelData = {
-            name,
-            city,
-            state,
-            price,
+        const hotelInfo = {
+            name: hotelData.name,
+            city: hotelData.city,
+            state: hotelData.state,
+            price: hotelData.price,
         };
-        localStorage.setItem('@selectedHotel', JSON.stringify(hotelData));
+        localStorage.setItem('@selectedHotel', JSON.stringify(hotelInfo));
+    }
+
+    function handleEdit(event) {
+        event.preventDefault();
+        onEdit(hotelData, index);
     }
 
     return (
@@ -46,21 +60,35 @@ export default function HotelCard({
                 {imgLoaded ? (
                     <img
                         className={styles.imgCard}
-                        src={imgURL}
-                        alt={name}
+                        src={hotelData.imgURL}
+                        alt={hotelData.name}
                         onError={() => setImgLoaded(false)}
                     />
                 ) : (
-                    <div className={styles.imgCard}>Imagem não disponivel</div>
+                    <div className={styles.imgCard}>Imagem não disponível</div>
                 )}
-                <h2 className={styles.hotelName}>{name}</h2>
-                <p>{desc}</p>
+                <h2 className={styles.hotelName}>{hotelData.name}</h2>
+                <p>
+                    {hotelData.desc.length > 59
+                        ? hotelData.desc.substring(0, 56) + '...'
+                        : hotelData.desc}
+                </p>
                 <div className={styles.hotelStars}>{renderStars()}</div>
                 <div className={styles.infos}>
-                    <div className={styles.state}>Estado: {state}</div>
-                    <div className={styles.city}>Cidade: {city}</div>
-                    <div className={styles.price}>Preço: R${price.toFixed(2)}</div>
+                    <div className={styles.state}>Estado: {hotelData.state}</div>
+                    <div className={styles.city}>Cidade: {hotelData.city}</div>
+                    <div className={styles.price}>
+                        Preço: R${hotelData.price.toFixed(2)}
+                    </div>
                 </div>
+                <Button
+                    variant='contained'
+                    onClick={(event) => {
+                        handleEdit(event);
+                    }}
+                >
+                    Editar
+                </Button>
             </div>
         </Link>
     );
@@ -75,4 +103,6 @@ HotelCard.propTypes = {
     city: PropTypes.string.isRequired,
     state: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    onEdit: PropTypes.func,
+    index: PropTypes.number,
 };

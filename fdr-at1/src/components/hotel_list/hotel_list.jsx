@@ -3,7 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 import styles from './hotel_list.module.css';
 import HotelCard from '../hotel_card/hotel_card';
 
-export default function HotelList({ hotels: initialHotels, margin, gap }) {
+export default function HotelList({
+    hotels: initialHotels,
+    margin,
+    gap,
+    onEdit,
+}) {
     const [hotels, setHotels] = useState([]);
 
     const getHotels = useCallback(() => {
@@ -53,7 +58,7 @@ export default function HotelList({ hotels: initialHotels, margin, gap }) {
             className={styles.hotelList}
         >
             {hotels.map((hotel, i) => (
-                <HotelCard key={i} {...hotel} />
+                <HotelCard onEdit={onEdit} index={i} key={i} {...hotel} />
             ))}
         </div>
     );
@@ -74,4 +79,5 @@ HotelList.propTypes = {
     ),
     margin: PropTypes.string,
     gap: PropTypes.string,
+    onEdit: PropTypes.func,
 };
