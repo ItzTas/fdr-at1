@@ -10,6 +10,7 @@ export default function HotelList({
     onEdit,
     onDelete,
     searchTerm,
+    sortBy,
 }) {
     const [hotels, setHotels] = useState([]);
 
@@ -37,13 +38,21 @@ export default function HotelList({
             !searchTerm
         );
     });
+    const sortedHotels = filteredHotels.sort((a, b) => {
+        if (sortBy === 'price') {
+            return b.price - a.price;
+        } else if (sortBy === 'stars') {
+            return b.stars - a.stars;
+        }
+        return 0;
+    });
 
     return (
         <div
             style={{ margin: margin || '0px', gap: gap || '70px' }}
             className={styles.hotelList}
         >
-            {filteredHotels.map((hotel, i) => (
+            {sortedHotels.map((hotel, i) => (
                 <HotelCard
                     onDelete={onDelete}
                     onEdit={onEdit}
@@ -74,4 +83,5 @@ HotelList.propTypes = {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
     searchTerm: PropTypes.string,
+    sortBy: PropTypes.string,
 };

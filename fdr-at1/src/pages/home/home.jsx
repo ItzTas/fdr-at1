@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import HotelList from '../../components/hotel_list/hotel_list';
 import AddHotel from '../../components/add_hotel/add_hotel';
 import SearchBar from '../../components/search_bar/search_bar';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const initialHotels = [
     {
         name: 'Hotel Unique',
-        stars: 5,
+        stars: 3,
         desc: 'Um hotel exclusivo e luxuoso em São Paulo, oferecendo serviços de primeira linha.',
         city: 'São Paulo',
         state: 'São Paulo',
@@ -28,7 +29,7 @@ const initialHotels = [
     },
     {
         name: 'Fasano Rio',
-        stars: 5,
+        stars: 4,
         desc: 'O Fasano Rio é sinônimo de exclusividade e sofisticação. Localizado na Praia de Ipanema, o hotel é conhecido por seu design arrojado e por oferecer uma das melhores vistas do pôr do sol carioca.',
         city: 'Rio de Janeiro',
         state: 'Rio de Janeiro',
@@ -44,6 +45,7 @@ export default function Home() {
     const [editingHotel, setEditingHotel] = useState(null);
     const [editingIndex, setEditingIndex] = useState(-1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [sortBy, setSortBy] = useState('price');
 
     useEffect(() => {
         let hotelList = localStorage.getItem('@hotelsList');
@@ -87,16 +89,31 @@ export default function Home() {
         setSearchTerm(searchTerm);
     }
 
+    const handleSortChange = (event) => {
+        setSortBy(event.target.value);
+    };
+
     return (
         <div>
             <AddHotel editingHotel={editingHotel} onAdd={handleAdd} />
             <SearchBar getSearch={getSearch} />
+
+            <FormControl fullWidth sx={{ marginTop: '30px' }}>
+                <InputLabel>Ordenar por</InputLabel>
+                <Select value={sortBy} onChange={handleSortChange}>
+                    <MenuItem value=''>Não ordenar</MenuItem>
+                    <MenuItem value='price'>Preço</MenuItem>
+                    <MenuItem value='stars'>Classificação</MenuItem>
+                </Select>
+            </FormControl>
+
             <HotelList
                 searchTerm={searchTerm}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
                 hotels={hotels}
                 margin='20px'
+                sortBy={sortBy}
             />
         </div>
     );

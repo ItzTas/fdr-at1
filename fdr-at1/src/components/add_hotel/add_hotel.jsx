@@ -57,6 +57,12 @@ export default function AddHotel({ onAdd, editingHotel }) {
             return;
         }
 
+        if (price < 0) {
+            setErrorMessage('O preço não pode ser negativo.');
+            setOpen(true);
+            return;
+        }
+
         const { name, imgURL, desc, city, state } = hotelData;
         onAdd({ name, imgURL, desc, city, state, price, stars });
         setHotelData({
