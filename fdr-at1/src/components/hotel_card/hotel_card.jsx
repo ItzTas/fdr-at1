@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import styles from './hotel_card.module.css';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function HotelCard({
     hotelURL,
@@ -15,6 +17,7 @@ export default function HotelCard({
     price,
     onEdit,
     index,
+    onDelete,
 }) {
     const [imgLoaded, setImgLoaded] = useState(true);
     const [hotelData, setHotelData] = useState({
@@ -54,6 +57,11 @@ export default function HotelCard({
         onEdit(hotelData, index);
     }
 
+    function handleDelete(event) {
+        event.preventDefault();
+        onDelete(index);
+    }
+
     return (
         <Link className={styles.link} to={hotelURL} onClick={handleCardClick}>
             <div className={styles.hotelCard}>
@@ -82,12 +90,23 @@ export default function HotelCard({
                     </div>
                 </div>
                 <Button
+                    startIcon={<EditIcon />}
                     variant='contained'
                     onClick={(event) => {
                         handleEdit(event);
                     }}
                 >
                     Editar
+                </Button>
+                <Button
+                    startIcon={<DeleteIcon />}
+                    variant='contained'
+                    color='error'
+                    onClick={(event) => {
+                        handleDelete(event);
+                    }}
+                >
+                    Deletar
                 </Button>
             </div>
         </Link>
@@ -105,4 +124,5 @@ HotelCard.propTypes = {
     price: PropTypes.number.isRequired,
     onEdit: PropTypes.func,
     index: PropTypes.number,
+    onDelete: PropTypes.func,
 };

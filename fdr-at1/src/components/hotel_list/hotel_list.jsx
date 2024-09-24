@@ -8,6 +8,8 @@ export default function HotelList({
     margin,
     gap,
     onEdit,
+    onDelete,
+    searchTerm,
 }) {
     const [hotels, setHotels] = useState([]);
 
@@ -20,45 +22,35 @@ export default function HotelList({
         if (hotelsStorage) {
             return setHotels(JSON.parse(hotelsStorage));
         }
-        const defaultHotels = [
-            {
-                name: 'Hotel A',
-                stars: 5,
-                desc: 'This is a hotel that will be used as the default for all customers',
-                city: 'São Paulo',
-                state: 'SP',
-                price: 500,
-                imgURL:
-                    'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.voltaaomundo.pt%2Ffiles%2F2016%2F06%2Fconrad.jpg&f=1&nofb=1',
-                hotelURL: '/hotels/1',
-            },
-            {
-                name: 'Hotel B',
-                stars: 4,
-                desc: 'This is a hotel that will be used as the default for all customers',
-                city: 'Rio de Janeiro',
-                state: 'RJ',
-                price: 400,
-                imgURL:
-                    'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sCyl_SbxWmK61J4Ab7gbcwHaEK%26pid%3DApi&f=1',
-                hotelURL: '/hotels/2',
-            },
-        ];
-        localStorage.setItem('@hotelsList', JSON.stringify(defaultHotels));
-        setHotels(defaultHotels);
     }, [initialHotels]);
 
     useEffect(() => {
         getHotels();
     }, [getHotels]);
 
+    const filteredHotels = hotels.filter((hotel) => {
+        const lowerSearchTerm = searchTerm.toLowerCase();
+        return (
+            hotel.name.toLowerCase().includes(lowerSearchTerm) ||
+            hotel.city.toLowerCase().includes(lowerSearchTerm) ||
+            hotel.state.toLowerCase().includes(lowerSearchTerm) ||
+            !searchTerm
+        );
+    });
+
     return (
         <div
             style={{ margin: margin || '0px', gap: gap || '70px' }}
             className={styles.hotelList}
         >
-            {hotels.map((hotel, i) => (
-                <HotelCard onEdit={onEdit} index={i} key={i} {...hotel} />
+            {filteredHotels.map((hotel, i) => (
+                <HotelCard
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                    index={i}
+                    key={i}
+                    {...hotel}
+                />
             ))}
         </div>
     );
@@ -80,4 +72,6 @@ HotelList.propTypes = {
     margin: PropTypes.string,
     gap: PropTypes.string,
     onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
+    searchTerm: PropTypes.string,
 };

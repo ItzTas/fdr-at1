@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import HotelList from '../../components/hotel_list/hotel_list';
 import AddHotel from '../../components/add_hotel/add_hotel';
-import { number } from 'prop-types';
+import SearchBar from '../../components/search_bar/search_bar';
 
 const initialHotels = [
     {
@@ -43,6 +43,7 @@ export default function Home() {
     const [hotels, setHotels] = useState([]);
     const [editingHotel, setEditingHotel] = useState(null);
     const [editingIndex, setEditingIndex] = useState(-1);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         let hotelList = localStorage.getItem('@hotelsList');
@@ -73,10 +74,30 @@ export default function Home() {
         setEditingIndex(index);
     }
 
+    function handleDelete(index) {
+        const updatedHotels = [...hotels];
+        updatedHotels.splice(index, 1);
+        localStorage.setItem('@hotelsList', JSON.stringify(updatedHotels));
+        setHotels(updatedHotels);
+        setEditingHotel(null);
+        setEditingIndex(-1);
+    }
+
+    function getSearch(searchTerm) {
+        setSearchTerm(searchTerm);
+    }
+
     return (
         <div>
             <AddHotel editingHotel={editingHotel} onAdd={handleAdd} />
-            <HotelList onEdit={handleEdit} hotels={hotels} margin='20px' />
+            <SearchBar getSearch={getSearch} />
+            <HotelList
+                searchTerm={searchTerm}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                hotels={hotels}
+                margin='20px'
+            />
         </div>
     );
 }
