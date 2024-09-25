@@ -30,6 +30,8 @@ export default function HotelList({
         getHotels();
     }, [getHotels]);
 
+
+
     const filteredHotels = hotels.filter((hotel) => {
         const lowerSearchTerm = searchTerm.toLowerCase();
         return (
