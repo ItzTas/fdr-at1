@@ -67,6 +67,9 @@ export default function Home() {
         const storedTheme = localStorage.getItem('@theme');
         if (storedTheme) {
             setTheme(storedTheme);
+        } else {
+            setTheme('light');
+            localStorage.setItem('@theme', 'light');
         }
     }, []);
 
@@ -75,6 +78,8 @@ export default function Home() {
             return;
         }
         document.body.className = theme;
+        console.log(document.body.className);
+
         localStorage.setItem('@theme', theme);
     }, [theme]);
 
